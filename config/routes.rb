@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
 
+  #ゲストユーザー用
+  devise_scope :user do
+    post 'users/guest_sign_in' => 'users/sessions#guest_sign_in'
+  end
+
+
   #管理者用
   devise_for :admin, skip: [:registrations, :passwords], controllers: {
     sessions: "admin/sessions"
@@ -11,8 +17,9 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :customers, only: [:index, :show, :edit, :update]
     resources :genres, only: [:index, :create, :edit, :update]
-    resources :posts, only: [:index, :show, :edit, :update]
-    resources :comments, only: [:index, :show, :edit, :update]
+    resources :posts, only: [:index, :show, :edit, :update] do
+     resource :comments, only: [:show, :edit, :update]
+    end
   end
 
 
@@ -29,14 +36,11 @@ Rails.application.routes.draw do
     get 'my_page' => 'customers#show', as: 'my_page'
     get 'my_info/edit' => 'customers#edit', as: 'edit_my_info'
     patch 'my_info' => 'customers#update', as: 'my_info'
-  end
-  namespace :public do
+    get 'customers/:id/favorites' => 'customers#favorites', as: 'my_favorites'
+    get 'search' => 'searches#search'
     resources :posts, only: [:new, :create, :index, :show, :edit, :update, :destroy] do
       resource :comments, only: [:create, :destroy]
       resource :favorites, only: [:create, :destroy]
-      member do
-        get :favorites
-      end
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
