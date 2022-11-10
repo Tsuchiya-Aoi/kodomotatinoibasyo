@@ -1,4 +1,8 @@
 class Public::FavoritesController < ApplicationController
-  def index
+
+  def create
+  end
+
+  def destroy
   end
 end

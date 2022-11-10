@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
 
+  get 'searches/search'
+  namespace :public do
+    get 'comments/create'
+    get 'comments/destroy'
+  end
   #ゲストユーザー用
   devise_scope :user do
     post 'users/guest_sign_in' => 'users/sessions#guest_sign_in'
@@ -37,11 +42,13 @@ Rails.application.routes.draw do
     get 'my_info/edit' => 'customers#edit', as: 'edit_my_info'
     patch 'my_info' => 'customers#update', as: 'my_info'
     get 'customers/:id/favorites' => 'customers#favorites', as: 'my_favorites'
-    get 'search' => 'searches#search'
     resources :posts, only: [:new, :create, :index, :show, :edit, :update, :destroy] do
       resource :comments, only: [:create, :destroy]
       resource :favorites, only: [:create, :destroy]
     end
   end
+
+  #検索用
+  get 'search' => 'searches#search'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
