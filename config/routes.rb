@@ -1,19 +1,13 @@
 Rails.application.routes.draw do
 
-  get 'searches/search'
-  namespace :public do
-    get 'comments/create'
-    get 'comments/destroy'
-  end
   #ゲストユーザー用
   devise_scope :user do
     post 'users/guest_sign_in' => 'users/sessions#guest_sign_in'
   end
 
-
   #管理者用
   devise_for :admin, skip: [:registrations, :passwords], controllers: {
-    sessions: "admin/sessions"
+    sessions: 'admin/sessions'
   }
 
   scope module: :admin do
@@ -27,11 +21,10 @@ Rails.application.routes.draw do
     end
   end
 
-
   #会員用
   devise_for :customers, controllers: {
-    registrations: "public/registrations",
-    sessions: "public/sessions"
+    registrations: 'public/registrations',
+    sessions: 'public/sessions'
   }
 
   scope module: :public do
